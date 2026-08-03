@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="fil">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>DALUMAT</title>
+
+<meta
+name="description"
+content="DALUMAT - Tuklasin ang lalim ng wikang Filipino.">
+
+<link
+rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link
+rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<link
+rel="stylesheet"
+href="css/style.css">
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+<div class="container">
+
+<a
+href="index.html"
+class="logo">
+
+DALUMAT
+
+</a>
+
+<nav class="navigation">
+
+<a
+href="index.html"
+class="active">
+
+Home
+
+</a>
+
+<a
+href="dictionary.html">
+
+Diksyunaryo
+
+</a>
+
+<a
+href="translate.html">
+
+Isalin
+
+</a>
+
+<a
+href="about.html">
+
+Tungkol
+
+</a>
+
+</nav>
+
+<button
+class="menu-toggle"
+id="menuToggle">
+
+<span></span>
+<span></span>
+<span></span>
+
+</button>
+
+</div>
+
+</header>
+
+<main>
+
+<section class="hero">
+
+<div class="container">
+
+<h1>
+
+Tuklasin ang lalim ng wikang Filipino.
+
+</h1>
+
+<p>
+
+Maghanap ng kahulugan, halimbawa, at pinagmulan ng mga salitang Filipino sa isang makabagong diksyunaryo.
+
+</p>
+
+<form
+id="searchForm"
+class="search-box">
+
+<input
+
+type="text"
+
+id="searchInput"
+
+placeholder="Maghanap ng salitang Filipino..."
+
+autocomplete="off">
+
+<button
+type="submit">
+
+Hanapin
+
+</button>
+
+</form>
+
+</div>
+
+</section>
+<section class="feature-section">
+
+<div class="container">
+
+<div class="feature-card">
+
+<div class="section-title">
+
+<h2>
+
+ALAM MO BA?
+
+</h2>
+
+</div>
+
+<div id="dailyWord">
+
+<h3 id="dailyWordTitle">
+
+Marahuyo
+
+</h3>
+
+<p class="word-type">
+
+Pang-uri
+
+</p>
+
+<p id="dailyDefinition">
+
+Lubos na nahalina o nabighani.
+
+</p>
+
+<div class="example-box">
+
+<h4>
+
+Halimbawa
+
+</h4>
+
+<p id="dailyExample">
+
+Marahuyo ang mga manonood sa kaniyang tinig.
+
+</p>
+
+</div>
+
+<div class="origin-box">
+
+<h4>
+
+Pinagmulan
+
+</h4>
+
+<p id="dailyOrigin">
+
+Wikang Bikol
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<section class="translate-section">
+
+<div class="container">
+
+<div class="translate-card">
+
+<div class="section-title">
+
+<h2>
+
+Isalin sa Filipino
+
+</h2>
+
+</div>
+
+<form
+id="translateForm">
+
+<select
+id="languageSelect">
+
+<option value="english">
+
+English
+
+</option>
+
+<option value="japanese">
+
+Japanese
+
+</option>
+
+<option value="korean">
+
+Korean
+
+</option>
+
+<option value="chinese">
+
+Chinese
+
+</option>
+
+<option value="spanish">
+
+Spanish
+
+</option>
+
+<option value="cebuano">
+
+Cebuano
+
+</option>
+
+<option value="ilocano">
+
+Ilokano
+
+</option>
+
+<option value="kapampangan">
+
+Kapampangan
+
+</option>
+
+<option value="waray">
+
+Waray
+
+</option>
+
+<option value="hiligaynon">
+
+Hiligaynon
+
+</option>
+
+</select>
+
+<input
+
+type="text"
+
+id="translateInput"
+
+placeholder="Maglagay ng salita">
+
+<button
+type="submit">
+
+Isalin
+
+</button>
+
+</form>
+
+<div id="translationResult">
+
+<p>
+
+Ang salin ay lalabas dito.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="popular-section">
+
+<div class="container">
+
+<div class="section-title">
+
+<h2>
+
+Mga Madalas Hanapin
+
+</h2>
+
+<p>
+
+Mga salitang madalas hinahanap ng mga gumagamit ng DALUMAT.
+
+</p>
+
+</div>
+
+<div class="popular-grid">
+
+<a href="#" class="popular-word">
+
+Marahuyo
+
+</a>
+
+<a href="#" class="popular-word">
+
+Gunita
+
+</a>
+
+<a href="#" class="popular-word">
+
+Balintataw
+
+</a>
+
+<a href="#" class="popular-word">
+
+Hiraya
+
+</a>
+
+<a href="#" class="popular-word">
+
+Hinagpis
+
+</a>
+
+<a href="#" class="popular-word">
+
+Agimat
+
+</a>
+
+<a href="#" class="popular-word">
+
+Paglalagom
+
+</a>
+
+<a href="#" class="popular-word">
+
+Dalumat
+
+</a>
+
+<a href="#" class="popular-word">
+
+Pagpapahalaga
+
+</a>
+
+<a href="#" class="popular-word">
+
+Guniguni
+
+</a>
+
+<a href="#" class="popular-word">
+
+Panimdim
+
+</a>
+
+<a href="#" class="popular-word">
+
+Silakbo
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<section class="about-preview">
+
+<div class="container">
+
+<div class="about-card">
+
+<h2>
+
+Ano ang DALUMAT?
+
+</h2>
+
+<p>
+
+Ang DALUMAT ay isang makabagong website na naglalayong gawing mas madaling maunawaan at matuklasan ang mga salitang Filipino. Naglalaman ito ng mga kahulugan, halimbawa ng paggamit, pinagmulan ng mga salita, at mga salin mula sa iba't ibang wika tungo sa Filipino.
+
+</p>
+
+<a
+href="about.html"
+class="button">
+
+Matuto Pa
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<footer>
+
+<div class="container">
+
+<div class="footer-content">
+
+<h2>
+
+DALUMAT
+
+</h2>
+
+<p>
+
+Tuklasin ang lalim ng wikang Filipino.
+
+</p>
+
+</div>
+
+<div class="footer-bottom">
+
+<p>
+
+© 2026 DALUMAT. Lahat ng karapatan ay nakalaan.
+
+</p>
+
+</div>
+
+</div>
+
+</footer>
+
+<section class="dictionary-preview">
+
+<div class="container">
+
+<div class="section-title">
+
+<h2>
+
+Galugarin ang Diksyunaryo
+
+</h2>
+
+<p>
+
+Tuklasin ang iba't ibang salitang Filipino at ang kanilang kahulugan.
+
+</p>
+
+</div>
+
+<div class="dictionary-grid">
+
+<div class="dictionary-card">
+
+<h3>
+
+Kahulugan
+
+</h3>
+
+<p>
+
+Alamin ang malinaw at wastong kahulugan ng bawat salita.
+
+</p>
+
+</div>
+
+<div class="dictionary-card">
+
+<h3>
+
+Halimbawa
+
+</h3>
+
+<p>
+
+Tingnan kung paano ginagamit ang salita sa pangungusap.
+
+</p>
+
+</div>
+
+<div class="dictionary-card">
+
+<h3>
+
+Pinagmulan
+
+</h3>
+
+<p>
+
+Kilalanin ang pinagmulan o kasaysayan ng salita.
+
+</p>
+
+</div>
+
+<div class="dictionary-card">
+
+<h3>
+
+Uri ng Salita
+
+</h3>
+
+<p>
+
+Matukoy kung ang salita ay pangngalan, pandiwa, pang-uri, o iba pa.
+
+</p>
+
+</div>
+
+</div>
+
+<div class="dictionary-button">
+
+<a
+href="dictionary.html"
+class="button">
+
+Buksan ang Diksyunaryo
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<section class="mission-section">
+
+<div class="container">
+
+<div class="mission-card">
+
+<h2>
+
+Layunin ng DALUMAT
+
+</h2>
+
+<p>
+
+Nilalayon ng DALUMAT na maging isang mapagkakatiwalaang sanggunian ng mga salitang Filipino. Hangad nitong mapalawak ang bokabularyo ng mga mag-aaral, guro, mananaliksik, at sinumang nais matuto ng wikang Filipino sa pamamagitan ng isang moderno, malinaw, at madaling gamitin na website.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="quick-access">
+
+<div class="container">
+
+<div class="section-title">
+
+<h2>
+
+Mabilis na Pag-access
+
+</h2>
+
+<p>
+
+Pumili ng nais mong gamitin sa DALUMAT.
+
+</p>
+
+</div>
+
+<div class="quick-grid">
+
+<a
+href="dictionary.html"
+class="quick-card">
+
+<h3>
+
+Diksyunaryo
+
+</h3>
+
+<p>
+
+Maghanap ng kahulugan ng mga salitang Filipino.
+
+</p>
+
+</a>
+
+<a
+href="translate.html"
+class="quick-card">
+
+<h3>
+
+Isalin
+
+</h3>
+
+<p>
+
+Magsalin mula sa iba't ibang wika tungo sa Filipino.
+
+</p>
+
+</a>
+
+<a
+href="#"
+class="quick-card"
+id="randomWordBtn">
+
+<h3>
+
+Random na Salita
+
+</h3>
+
+<p>
+
+Tumuklas ng isang bagong salitang Filipino.
+
+</p>
+
+</a>
+
+<a
+href="#top"
+class="quick-card">
+
+<h3>
+
+Bumalik sa Itaas
+
+</h3>
+
+<p>
+
+Mabilis na bumalik sa simula ng pahina.
+
+</p>
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<section class="search-result-section">
+
+<div class="container">
+
+<div
+id="searchResultContainer">
+
+<!--
+Dito lalabas ang resulta ng paghahanap.
+JavaScript ang maglalagay ng laman.
+-->
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<button
+id="backToTop"
+class="back-to-top">
+
+↑
+
+</button>
+
+<!-- ==========================
+MAIN JAVASCRIPT
+========================== -->
+
+<script
+type="module"
+src="js/app.js">
+</script>
+
+</main>
+
+</body>
+
+</html>
