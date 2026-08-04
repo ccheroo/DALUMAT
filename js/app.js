@@ -1,47 +1,13 @@
-/* ===================================================
-   DALUMAT
-   Main Application
-   Version 1.0 Final
-=================================================== */
+/* ======================================================
+DALUMAT
+Version 1.0
+====================================================== */
 
+"use strict";
 
-
-// ===================================================
-// FIREBASE
-// ===================================================
-
-import {
-
-    db
-
-} from "./firebase.js";
-
-
-
-import {
-
-    collection,
-
-    getDocs,
-
-    query,
-
-    orderBy,
-
-    limit
-
-}
-
-from
-
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-
-
-
-// ===================================================
-// DOM
-// ===================================================
+/* ======================================================
+ELEMENTS
+====================================================== */
 
 const searchForm =
 document.getElementById("searchForm");
@@ -49,1078 +15,701 @@ document.getElementById("searchForm");
 const searchInput =
 document.getElementById("searchInput");
 
-const searchResultContainer =
-document.getElementById("searchResultContainer");
+const searchButton =
+document.getElementById("searchButton");
 
-const randomWordBtn =
-document.getElementById("randomWordBtn");
+const suggestions =
+document.getElementById("suggestions");
 
-const backToTop =
-document.getElementById("backToTop");
+const searchResult =
+document.getElementById("searchResult");
+
+const noResult =
+document.getElementById("noResult");
+
+const resultType =
+document.getElementById("resultType");
+
+const resultWord =
+document.getElementById("resultWord");
+
+const resultDefinition =
+document.getElementById("resultDefinition");
+
+const resultExample =
+document.getElementById("resultExample");
+
+const resultOrigin =
+document.getElementById("resultOrigin");
+
+const resultEnglish =
+document.getElementById("resultEnglish");
+
+const dailyWord =
+document.getElementById("dailyWord");
+
+const dailyDefinition =
+document.getElementById("dailyDefinition");
 
 const translateForm =
 document.getElementById("translateForm");
+
+const translateInput =
+document.getElementById("translateInput");
+
+const languageSelect =
+document.getElementById("languageSelect");
 
 const translationResult =
 document.getElementById("translationResult");
 
 
+/* ======================================================
+GLOBAL DATA
+====================================================== */
+
+let dictionary = [];
+
+let filteredWords = [];
 
 
-// ===================================================
-// CACHE
-// ===================================================
-
-let words=[];
-
-let translations=[];
-
-
-
-
-// ===================================================
-// START
-// ===================================================
+/* ======================================================
+INITIALIZE
+====================================================== */
 
 document.addEventListener(
 
-"DOMContentLoaded",
+    "DOMContentLoaded",
 
-async()=>{
+    async () => {
 
-await loadWords();
+        await loadDictionary();
 
-await loadTranslations();
+        initializeDailyWord();
 
-await loadDailyWord();
+        initializeEvents();
 
-initializeEvents();
+    }
+
+);
+/* ======================================================
+LOAD DICTIONARY
+====================================================== */
+
+async function loadDictionary(){
+
+    try{
+
+        const response = await fetch("data/dictionary.json");
+
+        if(!response.ok){
+
+            throw new Error("Hindi mabasa ang dictionary.");
+
+        }
+
+        dictionary = await response.json();
+
+        filteredWords = [...dictionary];
+
+        console.log(
+
+            `DALUMAT loaded ${dictionary.length} words.`
+
+        );
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        dailyWord.textContent = "Hindi ma-load ang diksyunaryo.";
+
+        dailyDefinition.textContent =
+        "Pakisubukang i-refresh ang pahina.";
+
+    }
 
 }
 
-);
 
 
+/* ======================================================
+DAILY WORD
+====================================================== */
 
+function initializeDailyWord(){
 
-// ===================================================
-// EVENTS
-// ===================================================
+    if(dictionary.length === 0){
+
+        return;
+
+    }
+
+    const today = new Date();
+
+    const dayOfYear = Math.floor(
+
+        (today - new Date(today.getFullYear(),0,0))
+
+        / 86400000
+
+    );
+
+    const word = dictionary[
+        dayOfYear % dictionary.length
+    ];
+
+    dailyWord.textContent =
+    word.word;
+
+    dailyDefinition.textContent =
+    word.definition;
+
+}
+
+/* ======================================================
+EVENTS
+====================================================== */
 
 function initializeEvents(){
 
-if(searchForm){
+    searchForm.addEventListener(
 
-searchForm.addEventListener(
+        "submit",
 
-"submit",
+        function(event){
 
-searchWord
+            event.preventDefault();
 
-);
+            searchWord();
 
-}
+        }
 
-if(randomWordBtn){
-
-randomWordBtn.addEventListener(
-
-"click",
-
-showRandomWord
-
-);
-
-}
-
-if(translateForm){
-
-translateForm.addEventListener(
-
-"submit",
-
-translateWord
-
-);
-
-}
-
-window.addEventListener(
-
-"scroll",
-
-toggleBackToTop
-
-);
-
-if(backToTop){
-
-backToTop.addEventListener(
-
-"click",
-
-()=>{
-
-window.scrollTo({
-
-top:0,
-
-behavior:"smooth"
-
-});
-
-});
-
-}
-
-}
-
-// ===================================================
-// LOAD WORDS
-// ===================================================
-
-async function loadWords(){
-
-try{
-
-const snapshot =
-await getDocs(
-collection(db,"words")
-);
-
-words=[];
-
-snapshot.forEach(doc=>{
-
-words.push({
-
-id:doc.id,
-
-...doc.data()
-
-});
-
-});
-
-console.log(
-
-`Loaded ${words.length} words.`
-
-);
-
-}
-
-catch(error){
-
-console.error(
-
-"Unable to load words.",
-
-error
-
-);
-
-}
+    );
 
 }
 
 
 
-// ===================================================
-// LOAD TRANSLATIONS
-// ===================================================
+/* ======================================================
+SEARCH WORD
+====================================================== */
 
-async function loadTranslations(){
+function searchWord(){
 
-try{
+    const keyword =
 
-const snapshot =
-await getDocs(
-collection(db,"translations")
-);
+    searchInput.value
 
-translations=[];
+    .trim()
 
-snapshot.forEach(doc=>{
-
-translations.push({
-
-id:doc.id,
-
-...doc.data()
-
-});
-
-});
-
-console.log(
-
-`Loaded ${translations.length} translations.`
-
-);
-
-}
-
-catch(error){
-
-console.error(
-
-"Unable to load translations.",
-
-error
-
-);
-
-}
-
-}
+    .toLowerCase();
 
 
 
-// ===================================================
-// LOAD ALAM MO BA?
-// ===================================================
+    if(keyword === ""){
 
-async function loadDailyWord(){
+        hideResults();
 
-try{
+        return;
 
-const q=query(
+    }
 
-collection(db,"daily_feature"),
 
-orderBy("date","desc"),
 
-limit(1)
+    const word = dictionary.find(
 
-);
+        item =>
 
-const snapshot=
-await getDocs(q);
+        item.word.toLowerCase() === keyword
 
-if(snapshot.empty){
+    );
 
-return;
+
+
+    if(word){
+
+        displayWord(word);
+
+    }
+
+    else{
+
+        showNoResult();
+
+    }
 
 }
 
-const daily=snapshot.docs[0].data();
 
-const word=words.find(
 
-item=>item.id===daily.wordId
+/* ======================================================
+DISPLAY RESULT
+====================================================== */
 
-);
+function displayWord(word){
 
-if(!word){
+    noResult.classList.add("hidden");
 
-return;
-
-}
-
-document.getElementById(
-
-"dailyWordTitle"
-
-).textContent=
-
-word.word;
+    searchResult.classList.remove("hidden");
 
 
 
-document.getElementById(
+    resultType.textContent =
 
-"dailyDefinition"
-
-).textContent=
-
-word.definition;
+    word.partOfSpeech || "";
 
 
 
-document.getElementById(
+    resultWord.textContent =
 
-"dailyExample"
-
-).textContent=
-
-word.example;
+    word.word || "";
 
 
 
-document.getElementById(
+    resultDefinition.textContent =
 
-"dailyOrigin"
-
-).textContent=
-
-word.origin;
+    word.definition || "";
 
 
 
-const typeElement=
+    resultExample.textContent =
 
-document.querySelector(
+    word.example || "";
 
-".word-type"
 
-);
 
-if(typeElement){
+    resultOrigin.textContent =
 
-typeElement.textContent=
+    word.origin || "";
 
-word.partOfSpeech;
+
+
+    resultEnglish.textContent =
+
+    word.english || "";
 
 }
 
+
+
+/* ======================================================
+NO RESULT
+====================================================== */
+
+function showNoResult(){
+
+    searchResult.classList.add(
+
+        "hidden"
+
+    );
+
+
+
+    noResult.classList.remove(
+
+        "hidden"
+
+    );
+
 }
 
-catch(error){
 
-console.error(
 
-"Unable to load daily word.",
+/* ======================================================
+HIDE RESULT
+====================================================== */
 
-error
+function hideResults(){
 
-);
+    searchResult.classList.add(
+
+        "hidden"
+
+    );
+
+
+
+    noResult.classList.add(
+
+        "hidden"
+
+    );
 
 }
-
-}
-// ===================================================
-// LIVE SEARCH
-// ===================================================
-
-if(searchInput){
+/* ======================================================
+LIVE SEARCH
+====================================================== */
 
 searchInput.addEventListener(
 
-"input",
+    "input",
 
-liveSearch
+    function(){
 
-);
+        const keyword =
 
-}
+        searchInput.value
 
+        .trim()
 
+        .toLowerCase();
 
-function liveSearch(){
 
-const keyword=
 
-searchInput.value
+        suggestions.innerHTML = "";
 
-.trim()
 
-.toLowerCase();
 
+        if(keyword === ""){
 
+            hideResults();
 
-if(keyword===""){
+            return;
 
-searchResultContainer.innerHTML="";
+        }
 
-return;
 
-}
 
+        const matches = dictionary.filter(
 
+            item =>
 
-const results=
+            item.word
 
-words.filter(word=>{
+            .toLowerCase()
 
-return(
+            .startsWith(keyword)
 
-word.word
+        )
 
-.toLowerCase()
+        .slice(0,8);
 
-.includes(keyword)
 
-);
 
-});
+        if(matches.length === 0){
 
+            return;
 
+        }
 
-displaySearchResults(
 
-results
 
-);
+        matches.forEach(word=>{
 
-}
+            const item =
 
+            document.createElement("button");
 
 
-// ===================================================
-// DISPLAY SEARCH RESULT
-// ===================================================
 
-function displaySearchResults(results){
+            item.type = "button";
 
-searchResultContainer.innerHTML="";
 
 
+            item.className =
 
-if(results.length===0){
+            "suggestion-item";
 
-searchResultContainer.innerHTML=
 
-`
 
-<div class="feature-card">
+            item.textContent =
 
-<h3>
+            word.word;
 
-Walang Resulta
 
-</h3>
 
-<p>
+            item.addEventListener(
 
-Walang salitang tumutugma sa iyong hinanap.
+                "click",
 
-</p>
+                ()=>{
 
-</div>
+                    searchInput.value =
 
-`;
+                    word.word;
 
-return;
 
-}
 
+                    suggestions.innerHTML =
 
+                    "";
 
-results.forEach(word=>{
 
-const card=
 
-document.createElement("div");
+                    displayWord(word);
 
+                }
 
+            );
 
-card.className=
 
-"feature-card";
 
+            suggestions.appendChild(item);
 
+        });
 
-card.innerHTML=
-
-`
-
-<h2>
-
-${word.word}
-
-</h2>
-
-<p class="word-type">
-
-${word.partOfSpeech}
-
-</p>
-
-<p>
-
-${word.definition}
-
-</p>
-
-<div class="example-box">
-
-<h4>
-
-Halimbawa
-
-</h4>
-
-<p>
-
-${word.example}
-
-</p>
-
-</div>
-
-<div class="origin-box">
-
-<h4>
-
-Pinagmulan
-
-</h4>
-
-<p>
-
-${word.origin}
-
-</p>
-
-</div>
-
-`;
-
-
-
-searchResultContainer.appendChild(
-
-card
-
-);
-
-});
-
-}
-
-
-
-// ===================================================
-// SEARCH FORM
-// ===================================================
-
-async function searchWord(event){
-
-event.preventDefault();
-
-
-
-liveSearch();
-
-}
-
-// ===================================================
-// TRANSLATION
-// ===================================================
-
-async function translateWord(event){
-
-event.preventDefault();
-
-
-
-const language=
-
-document.getElementById(
-
-"languageSelect"
-
-).value;
-
-
-
-const keyword=
-
-document.getElementById(
-
-"translateInput"
-
-)
-
-.value
-
-.trim()
-
-.toLowerCase();
-
-
-
-if(keyword===""){
-
-translationResult.innerHTML=
-
-`
-
-<p>
-
-Maglagay muna ng salitang isasalin.
-
-</p>
-
-`;
-
-return;
-
-}
-
-
-
-const result=
-
-translations.find(item=>{
-
-return(
-
-item.language
-
-.toLowerCase()===
-
-language.toLowerCase()
-
-&&
-
-item.foreignWord
-
-.toLowerCase()===
-
-keyword
-
-);
-
-});
-
-
-
-if(!result){
-
-translationResult.innerHTML=
-
-`
-
-<h3>
-
-Walang Salin
-
-</h3>
-
-<p>
-
-Walang natagpuang salin para sa salitang ito.
-
-</p>
-
-`;
-
-return;
-
-}
-
-
-
-translationResult.innerHTML=
-
-`
-
-<h3>
-
-${result.foreignWord}
-
-</h3>
-
-<p>
-
-<strong>Salin sa Filipino</strong>
-
-</p>
-
-<h2>
-
-${result.filipinoWord}
-
-</h2>
-
-<div class="example-box">
-
-<h4>
-
-Halimbawa
-
-</h4>
-
-<p>
-
-${result.example}
-
-</p>
-
-</div>
-
-`;
-
-}
-
-
-
-// ===================================================
-// CLEAR TRANSLATION
-// ===================================================
-
-function clearTranslation(){
-
-translationResult.innerHTML=
-
-`
-
-<p>
-
-Ang salin ay lalabas dito.
-
-</p>
-
-`;
-
-}
-
-
-
-const translateInput=
-
-document.getElementById(
-
-"translateInput"
+    }
 
 );
 
 
 
-if(translateInput){
-
-translateInput.addEventListener(
-
-"input",
-
-()=>{
-
-if(
-
-translateInput.value.trim()===""
-
-){
-
-clearTranslation();
-
-}
-
-}
-
-);
-
-}
-
-// ===================================================
-// RANDOM WORD
-// ===================================================
-
-function showRandomWord(event){
-
-if(event){
-
-event.preventDefault();
-
-}
-
-if(words.length===0){
-
-return;
-
-}
-
-const random=
-
-words[
-
-Math.floor(
-
-Math.random()*words.length
-
-)
-
-];
-
-displaySingleWord(random);
-
-window.scrollTo({
-
-top:0,
-
-behavior:"smooth"
-
-});
-
-}
-
-
-
-// ===================================================
-// DISPLAY SINGLE WORD
-// ===================================================
-
-function displaySingleWord(word){
-
-searchResultContainer.innerHTML=
-
-`
-
-<div class="feature-card">
-
-<h2>
-
-${word.word}
-
-</h2>
-
-<p class="word-type">
-
-${word.partOfSpeech}
-
-</p>
-
-<p id="dailyDefinition">
-
-${word.definition}
-
-</p>
-
-<div class="example-box">
-
-<h4>
-
-Halimbawa
-
-</h4>
-
-<p>
-
-${word.example}
-
-</p>
-
-</div>
-
-<div class="origin-box">
-
-<h4>
-
-Pinagmulan
-
-</h4>
-
-<p>
-
-${word.origin}
-
-</p>
-
-</div>
-
-</div>
-
-`;
-
-}
-
-
-
-// ===================================================
-// BACK TO TOP
-// ===================================================
-
-function toggleBackToTop(){
-
-if(
-
-window.scrollY>400
-
-){
-
-backToTop.classList.add(
-
-"show"
-
-);
-
-}
-
-else{
-
-backToTop.classList.remove(
-
-"show"
-
-);
-
-}
-
-}
-
-
-
-// ===================================================
-// ESC KEY
-// ===================================================
+/* ======================================================
+HIDE SUGGESTIONS
+====================================================== */
 
 document.addEventListener(
 
-"keydown",
+    "click",
 
-(event)=>{
+    function(event){
 
-if(
+        if(
 
-event.key==="Escape"
+            !searchForm.contains(
 
-){
+                event.target
 
-searchInput.value="";
+            )
 
-searchResultContainer.innerHTML="";
+        ){
 
-clearTranslation();
+            suggestions.innerHTML = "";
+
+        }
+
+    }
+
+);
+/* ======================================================
+TRANSLATION ENGINE
+====================================================== */
+
+translateForm.addEventListener(
+
+    "submit",
+
+    async function(event){
+
+        event.preventDefault();
+
+        await translateWord();
+
+    }
+
+);
+
+
+
+async function translateWord(){
+
+    const word =
+
+    translateInput.value
+
+    .trim();
+
+
+
+    if(word === ""){
+
+        translationResult.innerHTML =
+
+        "<p>Maglagay muna ng salitang isasalin.</p>";
+
+        return;
+
+    }
+
+
+
+    const language =
+
+    languageSelect.value;
+
+
+
+    translationResult.innerHTML =
+
+    "<p>Nagsasalin...</p>";
+
+
+
+    try{
+
+        const response = await fetch(
+
+            `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=${language}|tl`
+
+        );
+
+
+
+        const data =
+
+        await response.json();
+
+
+
+        if(
+
+            data.responseData &&
+
+            data.responseData.translatedText
+
+        ){
+
+            translationResult.innerHTML =
+
+            `
+
+            <h3>
+
+                ${data.responseData.translatedText}
+
+            </h3>
+
+            <p>
+
+                Salin ng
+
+                <strong>${word}</strong>
+
+                mula sa
+
+                <strong>${language}</strong>.
+
+            </p>
+
+            `;
+
+        }
+
+        else{
+
+            translationResult.innerHTML =
+
+            "<p>Walang nahanap na salin.</p>";
+
+        }
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        translationResult.innerHTML =
+
+        "<p>Hindi makakonekta sa serbisyo ng pagsasalin.</p>";
+
+    }
 
 }
+/* ======================================================
+FINAL UTILITIES
+====================================================== */
 
-});
+window.addEventListener(
+
+    "load",
+
+    function(){
+
+        hideResults();
+
+    }
+
+);
 
 
-
-// ===================================================
-// ENTER KEY
-// ===================================================
 
 searchInput.addEventListener(
 
-"keydown",
+    "keydown",
 
-(event)=>{
+    function(event){
 
-if(
+        if(event.key === "Escape"){
 
-event.key==="Enter"
+            suggestions.innerHTML = "";
 
-){
+        }
 
-event.preventDefault();
-
-liveSearch();
-
-}
-
-});
-
-
-
-// ===================================================
-// SEARCH FOCUS
-// ===================================================
-
-window.addEventListener(
-
-"load",
-
-()=>{
-
-searchInput.focus();
-
-});
-
-// ===================================================
-// UTILITIES
-// ===================================================
-
-function escapeHTML(value){
-
-return String(value)
-
-.replace(/&/g,"&amp;")
-
-.replace(/</g,"&lt;")
-
-.replace(/>/g,"&gt;")
-
-.replace(/"/g,"&quot;")
-
-.replace(/'/g,"&#039;");
-
-}
-
-
-
-// ===================================================
-// SORT WORDS
-// ===================================================
-
-function sortWords(){
-
-words.sort((a,b)=>{
-
-return a.word.localeCompare(
-
-b.word,
-
-"fil"
+    }
 
 );
 
-});
+
+
+translateInput.addEventListener(
+
+    "keydown",
+
+    function(event){
+
+        if(event.key === "Enter"){
+
+            event.preventDefault();
+
+            translateWord();
+
+        }
+
+    }
+
+);
+
+
+
+/* ======================================================
+HELPERS
+====================================================== */
+
+function clearSuggestions(){
+
+    suggestions.innerHTML = "";
 
 }
 
 
 
-// ===================================================
-// REFRESH
-// ===================================================
+function clearSearch(){
 
-async function refreshDatabase(){
+    searchInput.value = "";
 
-await loadWords();
+    clearSuggestions();
 
-await loadTranslations();
-
-sortWords();
+    hideResults();
 
 }
 
 
 
-// ===================================================
-// INITIAL SORT
-// ===================================================
-
-window.addEventListener(
-
-"load",
-
-()=>{
-
-sortWords();
-
-});
-
-
-
-// ===================================================
-// CONSOLE
-// ===================================================
+/* ======================================================
+DALUMAT READY
+====================================================== */
 
 console.log(
 
-"%cDALUMAT",
+`%cDALUMAT READY`,
 
-"font-size:22px;font-weight:bold;color:#111;"
+"font-size:16px;font-weight:bold;color:#111;"
 
 );
 
 console.log(
 
-"DALUMAT Version 1.0 Final"
+`Dictionary Words : ${dictionary.length}`
 
 );
 
 console.log(
 
-"Application Loaded Successfully."
+"Version : 1.0"
 
 );
-
-
-
-// ===================================================
-// END
-// ===================================================
